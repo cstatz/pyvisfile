@@ -182,6 +182,14 @@ class SiloFile(_intnl.DBFile):
         _intnl.DBFile.put_curve(self, curvename, xvals, yvals,
                 _convert_optlist(optlist))
 
+    def mk_dir(self, directory):
+        _intnl.DBFile.mk_dir(self, directory)
+
+    def set_dir(self, path):
+        _intnl.DBFile.set_dir(self, path)
+
+    def get_dir(self):
+        return _intnl.DBFile.get_dir(self)
 
 class ParallelSiloFile:
     """A :class:`SiloFile` that automatically creates a parallel master file.

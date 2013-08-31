@@ -1339,7 +1339,50 @@ namespace
       PYVISFILE_DBFILE_GET_WRAPPER(curve, Curve);
 
       // }}}
+      
+      // {{{ mk_dir
 
+      void mk_dir(const char *directory)
+      {
+        ensure_db_open();
+
+        CALL_GUARDED(DBMkDir, (m_dbfile, directory));
+      }
+
+
+      // }}}
+
+      // {{{ set_dir
+
+      void set_dir(const char *path)
+      {
+        ensure_db_open();
+
+        CALL_GUARDED(DBSetDir, (m_dbfile, path));
+      }
+
+
+      // }}}
+
+      // {{{ get_dir
+
+      std::string get_dir()
+      {
+        ensure_db_open();
+
+        char* directory = new char[255];
+        CALL_GUARDED(DBGetDir, (m_dbfile, directory));
+      {
+        if (directory == NULL)
+          throw std::runtime_error("Could not get directory");
+      }
+        
+        std::string py_directory(directory);
+        return py_directory;
+      }
+
+
+      // }}}
       // {{{ toc
 
       DBtocCopy *get_toc()
@@ -1508,6 +1551,10 @@ BOOST_PYTHON_MODULE(_internal)
           return_value_policy<manage_new_object>())
       .def("get_quadvar", &cl::get_quadvar,
           return_value_policy<manage_new_object>())
+
+      .DEF_SIMPLE_METHOD(mk_dir)
+      .DEF_SIMPLE_METHOD(set_dir)
+      .def("get_dir", &cl::get_dir)
 
       .def("get_toc", &cl::get_toc,
           return_value_policy<manage_new_object>())
